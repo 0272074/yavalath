@@ -347,24 +347,26 @@ class YavalathGame {
     }
     
     wouldMakeFour(cell, player) {
+        const originalState = cell.state;
         cell.state = player;
         const dirPairs = [[this.directions[0],this.directions[1]], [this.directions[2],this.directions[3]], [this.directions[4],this.directions[5]]];
         let result = false;
         for (const [d1, d2] of dirPairs) {
-            if (1 + this.countInDirection(cell, d1, player) + this.countInDirection(cell, d2, player) >= 4) { result = true; break; }
+            if (player !== null && (1 + this.countInDirection(cell, d1, player) + this.countInDirection(cell, d2, player) >= 4)) { result = true; break; }
         }
-        cell.state = null;
+        cell.state = originalState;
         return result;
     }
     
     wouldMakeThree(cell, player) {
+        const originalState = cell.state;
         cell.state = player;
         const dirPairs = [[this.directions[0],this.directions[1]], [this.directions[2],this.directions[3]], [this.directions[4],this.directions[5]]];
         let result = false;
         for (const [d1, d2] of dirPairs) {
-            if (1 + this.countInDirection(cell, d1, player) + this.countInDirection(cell, d2, player) === 3) { result = true; break; }
+            if (player !== null && (1 + this.countInDirection(cell, d1, player) + this.countInDirection(cell, d2, player) === 3)) { result = true; break; }
         }
-        cell.state = null;
+        cell.state = originalState;
         return result;
     }
     
