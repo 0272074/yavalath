@@ -1,0 +1,294 @@
+﻿/* ============================================
+   ヤバラス (Yavalath) - スタイルシート
+   2カラムレイアウト版（3人戦スマホ対応）
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Sans+JP:wght@400;700&family=Quicksand:wght@500;700&display=swap');
+
+:root {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #0f1c2e;
+    --wood-light: #d4a574;
+    --wood-dark: #8b5a2b;
+    --gold: #ffd700;
+    --text-light: #f5f5f5;
+    --text-muted: #b0b0b0;
+    --hex-size: 54px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Quicksand', 'Noto Sans JP', sans-serif;
+    background: radial-gradient(circle at center, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    min-height: 100vh;
+    color: var(--text-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    max-width: 1300px;
+    width: 100%;
+}
+
+/* 左カラム: 盤面 */
+.board-area {
+    flex: 0 0 auto;
+}
+
+.board-container {
+    background: linear-gradient(160deg, #5d4037 0%, #3e2723 100%);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.6),
+        inset 0 2px 0 rgba(255, 255, 255, 0.05),
+        inset 0 0 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid #6d4c41;
+}
+
+.board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.board-row {
+    display: flex;
+    justify-content: center;
+    margin-top: calc(var(--hex-size) * -0.25);
+    z-index: 1; 
+}
+.board-row:first-child { margin-top: 0; }
+
+.hex {
+    --hex-w: calc(var(--hex-size) * 0.866);
+    --hex-h: var(--hex-size);
+    width: var(--hex-w);
+    height: var(--hex-h);
+    margin: 0 1px;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s;
+    position: relative;
+}
+
+.hex-inner {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #d4a574 0%, #a67c52 100%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hex-inner::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: linear-gradient(180deg, #e6b98a 0%, #c49a6c 50%, #8b5a2b 100%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+.hex:hover { transform: scale(1.15); z-index: 100; filter: brightness(1.1); }
+.hex.disabled { cursor: default; }
+.hex.disabled:hover { transform: none; filter: none; }
+
+.stone {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 5;
+    animation: placeStone 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.stone.black {
+    background: radial-gradient(circle at 30% 30%, #666 0%, #1a1a1a 60%, #000 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+.stone.white {
+    background: radial-gradient(circle at 30% 30%, #fff 0%, #e0e0e0 40%, #bbb 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), inset 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+/* 灰色の石（3人目） */
+.stone.grey {
+    background: radial-gradient(circle at 30% 30%, #a0a0a0 0%, #606060 40%, #404040 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+@keyframes placeStone {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.hex.winning .stone { animation: winPulse 1.5s ease-in-out infinite; box-shadow: 0 0 20px 5px var(--gold); }
+.hex.losing .stone { animation: losePulse 1.5s ease-in-out infinite; box-shadow: 0 0 20px 5px #ff4444; }
+@keyframes winPulse { 0% { box-shadow: 0 0 15px var(--gold); } 50% { box-shadow: 0 0 30px var(--gold), 0 0 10px #fff; } 100% { box-shadow: 0 0 15px var(--gold); } }
+@keyframes losePulse { 0% { filter: brightness(1); } 50% { filter: brightness(0.7); transform: scale(0.95); } 100% { filter: brightness(1); } }
+
+/* 右カラム: コントロールパネル */
+.controls-panel {
+    flex: 1;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+}
+
+.game-header { text-align: center; margin-bottom: 25px; }
+.game-header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 3rem;
+    background: linear-gradient(135deg, var(--gold) 20%, #ffecb3 50%, var(--wood-light) 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+    letter-spacing: 0.1em;
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+.subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.turn-indicator { margin-bottom: 25px; }
+.current-turn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0,0,0,0.4);
+    padding: 10px 25px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+#turn-text { font-size: 1.1rem; font-weight: 700; }
+.turn-stone {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: #1a1a1a; border: 2px solid rgba(255,255,255,0.1);
+}
+.turn-stone.white { background: #f5f5f5; border: 2px solid rgba(0,0,0,0.1); }
+.turn-stone.grey { background: #808080; border: 2px solid rgba(0,0,0,0.2); }
+
+/* 設定グループ */
+.settings-group {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.setting-item label { font-size: 0.95rem; font-weight: 700; color: var(--text-muted); }
+.setting-item select {
+    background-color: var(--bg-primary);
+    color: var(--text-light);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-family: 'Noto Sans JP', sans-serif;
+    outline: none;
+    cursor: pointer;
+    text-align: right;
+    width: 160px;
+}
+.setting-item.hidden { display: none; }
+
+.message-area { min-height: 30px; margin-bottom: 20px; text-align: center; }
+#message {
+    font-size: 1.1rem; font-weight: 700; color: var(--gold);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    white-space: pre-line;
+}
+#message.lose { color: #ff6b6b; text-shadow: 0 0 10px rgba(255, 107, 107, 0.4); }
+
+.btn-primary {
+    width: 100%;
+    padding: 12px 0;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 700;
+    font-family: 'Quicksand', sans-serif;
+    letter-spacing: 0.1em;
+    background: linear-gradient(135deg, var(--wood-light) 0%, var(--wood-dark) 100%);
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(212, 165, 116, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s;
+}
+.btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
+.btn-primary:active { transform: translateY(1px); }
+
+.rules {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 15px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.rules h3 {
+    font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;
+    text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 5px;
+}
+.rules p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.8; }
+.rules .warning { color: #ff8a8a; }
+
+/* スマホ対応: 縦並びに戻す & ボード縮小 */
+@media (max-width: 900px) {
+    .game-container { flex-direction: column; gap: 30px; }
+    .controls-panel { max-width: 100%; width: 100%; padding: 20px; }
+    :root { --hex-size: 44px; }
+}
+
+@media (max-width: 600px) {
+    :root { --hex-size: 34px; } /* さらに小さく */
+    .stone { width: 22px; height: 22px; } /* 石も小さく */
+    .turn-stone { width: 20px; height: 20px; }
+    
+    .board-container {
+        padding: 20px 10px; /* パディング削減 */
+        width: 100%;
+        overflow-x: auto; /* 万が一はみ出たらスクロール */
+        border-radius: 16px;
+    }
+    
+    .game-header h1 { font-size: 2.2rem; }
+    .game-header { margin-bottom: 15px; }
+    
+    .controls-panel { padding: 15px; }
+    .btn-primary { padding: 10px 0; font-size: 1rem; margin-bottom: 20px; }
+}
+
+@media (max-width: 380px) {
+    :root { --hex-size: 28px; } /* 極小画面用 */
+    .stone { width: 18px; height: 18px; }
+    
+    .board-container { padding: 15px 5px; }
+    .game-header h1 { font-size: 1.8rem; }
+}

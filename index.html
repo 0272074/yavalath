@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Yavalath (ヤバラス)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 盤面エリア（左） -->
+        <div class="board-area">
+            <div id="board" class="board-container board"></div>
+        </div>
+
+        <!-- コントロールパネル（右） -->
+        <div class="controls-panel">
+            <div class="game-header">
+                <h1>ヤバラス</h1>
+                <p class="subtitle">Yavalath</p>
+            </div>
+
+            <div class="turn-indicator">
+                <div class="current-turn">
+                    <span id="turn-text">黒の番</span>
+                    <div id="turn-stone" class="turn-stone"></div>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="setting-item">
+                    <label>プレイヤー人数:</label>
+                    <select id="player-count">
+                        <option value="2">2人</option>
+                        <option value="3">3人</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label>対戦モード:</label>
+                    <select id="game-mode">
+                        <option value="pvp">対人戦</option>
+                        <option value="npc">NPC戦</option>
+                    </select>
+                </div>
+                
+                <div id="npc-level-container" class="setting-item hidden">
+                    <label>NPCレベル:</label>
+                    <select id="npc-level">
+                        <option value="1">レベル1 (初心者)</option>
+                        <option value="2">レベル2 (中級者)</option>
+                        <option value="3">レベル3 (上級者)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="message-area">
+                <div id="message"></div>
+            </div>
+
+            <button id="restart-btn" class="btn btn-primary">ゲーム開始</button>
+
+            <div class="rules">
+                <h3>ルール</h3>
+                <p>
+                    プレイヤーは交互に、空いているマスに石を1つずつ置きます。<br>
+                    縦斜めのいずれかで石を4つ並べると勝ちですが、<br>
+                    先に3つ並べてしまうと負けになります。<br><br>
+                    相手より先に「4つ並べる」か、<br>
+                    相手に「3つ並べさせる」ことを目指しましょう。
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
